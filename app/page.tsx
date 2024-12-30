@@ -24,11 +24,9 @@ export default  async function App() {
 
   const session = await fetchAuthSession();
 
-  setTimeout(async () => {
-    const user = await getCurrentUser();
-    console.log("user", user);
+  const user = await getCurrentUser();
+console.log(user);
 
-  }, 10000);
 
 
   const {items} = await list({

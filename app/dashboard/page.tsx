@@ -1,64 +1,34 @@
-// "use client"
-
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../app/app.css";
-import { Amplify  } from "aws-amplify";
+import { Amplify } from "aws-amplify";
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
-import { useAuthenticator  } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import { getUrl } from 'aws-amplify/storage';
-import VidComponent from "./components/vid.component"
-import SignOutButtom from "./components/signuot.component"
-import { fetchAuthSession } from 'aws-amplify/auth';
-import { StorageImage } from '@aws-amplify/ui-react-storage';
-import { list } from 'aws-amplify/storage';
-import { getCurrentUser } from 'aws-amplify/auth';
 
 Amplify.configure(outputs);
 
 const client = generateClient<Schema>();
 
+export default async function App() {
+  //const { user, signOut } = useAuthenticator();
 
-export default  async function App() {
-
-  const session = await fetchAuthSession();
-
-  setTimeout(async () => {
-    const user = await getCurrentUser();
-    console.log("user", user);
-
-  }, 10000);
-
-
-  const {items} = await list({
-    path: `userFiles/`
-    // Alternatively, path: ({identityId}) => `album/{identityId}/photos/`
-  });
-
-  console.log('nigga wasup ------>',items);
-  
-
-
-  
-  // const { signOut } = useAuthenticator();
-
-  // const linkToStorageFile = await getUrl({
-  //   path:`userFiles/${identityId}/originalFIles/94d08be34378f5be7365d0347bc9575c.jpg`
+  const linkToStorageFile = await getUrl({
+    path: ({ identityId }) => `userFiles/${identityId}/originalFIles/3202860992.mp4`
     
-  //   // Alternatively, path: ({identityId}) => `album/{identityId}/1.jpg`
-  // });
-//   console.log('signed URL: ', linkToStorageFile.url.href);  
-// console.log('conoooooooooooo jose andres que vaina vale  <---------');
-
+    // Alternatively, path: ({identityId}) => `album/{identityId}/1.jpg`
+  });
+  
+  console.log('signed URL: ', linkToStorageFile.url.href);
+  console.log('URL expires at: ', linkToStorageFile.expiresAt);
   return (
   <div className="px-40 flex flex-1 justify-center py-5">
     <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
       <div className="flex flex-wrap justify-between gap-3 p-4">
         <p className="text-[#0e141b] tracking-light text-[32px] font-bold leading-tight min-w-72">
-          Your files {session.identityId}
+          Your files
         </p>
-        <SignOutButtom />
       </div>
       <div className="pb-3">
         <div className="flex border-b border-[#d0dbe7] px-4 justify-between">
@@ -89,14 +59,9 @@ export default  async function App() {
         </div>
       </div>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
-        {/* <VidComponent/> */}
-        {
-        items.map(async item => {
-          let src = await getUrl({path: item.path})
-          return <img src={src.url.href} alt="oh yeah" />
-        })
-        }
-        {/* <img src={linkToStorageFile.url.href} alt="oh yeah" /> */}
+        <div className="flex flex-col gap-3">
+          <video src={linkToStorageFile.url.href} controls></video>
+        </div>
         <div className="flex flex-col gap-3">
           <div
             className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"

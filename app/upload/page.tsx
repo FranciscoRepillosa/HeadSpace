@@ -3,10 +3,12 @@
 import { FileUploader } from '@aws-amplify/ui-react-storage';
 import '@aws-amplify/ui-react/styles.css';
 import { useAuthenticator  } from "@aws-amplify/ui-react";
+import { getCurrentUser } from 'aws-amplify/auth';
 
-export default function Page() {
 
-    const user = useAuthenticator();
+export default async function Page() {
+
+  const user = await getCurrentUser();
 // console.log('from ipload', user);
 
     return (  
